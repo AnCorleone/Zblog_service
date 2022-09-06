@@ -14,11 +14,12 @@ app.use(express.urlencoded({ extended: true }))
 
 // 自定义全局中间件
 app.use((req,res,next)=>{
-  res.cc= function (err,status =1) {
+  res.cc= function (err,status =1,data) {
       res.send(
         {
           status,
-          message : err instanceof Error ? err.message : err
+          message : err instanceof Error ? err.message : err,
+          data
         }
       )
   }
