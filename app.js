@@ -38,9 +38,9 @@ app.get('/', (req, res) => {
   })
 })
 // 错误处理
-app.use((err, req, res) => {
-  if (err instanceof joi.ValidationError) return req.cc(err)
-  req.cc(err)
+app.use((err, req, res,next) => {
+  if (err instanceof joi.ValidationError) return res.cc(err)
+  res.cc(err)
 })
 
 app.listen('3007', () => {
