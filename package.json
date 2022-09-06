@@ -9,6 +9,8 @@
   "author": "anran0919@163.com",
   "license": "ISC",
   "dependencies": {
+    "joi": "^17.6.0",
+    "@escook/express-joi": "^1.1.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",

@@ -1,5 +1,6 @@
 const express = require('express')
 const userRouter = require('./src/router/user')
+const joi = require('joi')
 // const mysql = require('mysql')
 const cors = require('cors')
 // const session = require('express-session')
@@ -38,20 +39,8 @@ app.get('/', (req, res) => {
 })
 // 错误处理
 app.use((err, req, res) => {
-  const data = {}
-  if (err) {
-    data = {
-      code: 300,
-      message: '请求出错!',
-    }
-  } else {
-    data = {
-      code: 200,
-      message: '请求成功!',
-      data: '绿蚁新醅酒，红泥小火炉。晚来天欲雪，能饮一杯无？'
-    }
-  }
-  res.json(data)
+  if (err instanceof joi.ValidationError) return req.cc(err)
+  req.cc(err)
 })
 
 app.listen('3007', () => {
