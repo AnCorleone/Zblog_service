@@ -14,7 +14,7 @@ router.get('/api/user/login', (req, res) => {
 router.post('/api/user/register', (req, res) => {
   res.json({
     code: 200,
-    message: '请求成功!',
+    message: '请求成功了!',
     data: '注册'
   })
 })
