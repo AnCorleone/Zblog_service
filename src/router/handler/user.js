@@ -2,6 +2,7 @@ const db = require('../../db/index')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { expiresIn, secretKey } = require('../../utils/config')
+const { use } = require('../user')
 exports.login = (req, res) => {
   const user = req.body
   const { username, password } = user
@@ -61,7 +62,6 @@ exports.getUserById = (req, res) => {
   const {id } = req.params
   db.query("SELECT * FROM  ev_user  WHERE id =  ?", id,(err,result)=>{
     if (err) return res.cc(err)
-    console.log('111',result);
     if (result.length!==1) return res.cc('获取用户信息失败!')
     const user =  result[0]
     const data  ={
@@ -74,18 +74,37 @@ exports.getUserById = (req, res) => {
 
 // 获取用户信息
 exports.getUser = (req,res)=>{
-  db.query('SELECT * from ev_user',(err,result)=>{
+  const auth = req.auth
+  db.query('SELECT * from ev_user WHERE username = ?',auth.username,(err,result)=>{
       if (err) return res.cc(err)
       if (result.length!==1) return res.cc('获取用户信息失败!')
+      const user = result[0]
+      delete user.password
       const data  ={
         data :{
-          
+          ...user
         }
       }
-      res.cc("ok",1 ,data)
+      res.cc("successful",1 ,data)
   })
   
 } 
+
+// 更新用户信息
+exports.updateUser =(req,res) =>{
+    const user =  req.body
+    db.query('update ev_user set ? where id=?',[user ,user.id], (err,result)=>{
+      if (err) return res.cc(err)
+      console.log(' ---  result ===  ',result);
+      if (!result) return res.cc('更新用户信息失败!')
+      res.cc('update ok !',1,user)
+    })
+}
+
+// 重置密码
+exports.resetPassword =(req,res) =>{
+  res.cc(' reset ok !')
+}
 //通过id删除用户
 exports.deleteUserById = (req, res) => {
   console.log('req---', req.params);

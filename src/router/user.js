@@ -19,4 +19,10 @@ router.get('/api/user', hanlder.getUser)
 //通过id删除用户
 router.delete('/api/user/:id', hanlder.deleteUserById)
 
+//更新用户信息
+router.put('/api/user/update', hanlder.updateUser)
+
+// 重置密码
+router.put('/api/user/reset', hanlder.resetPassword)
+
 module.exports = router
