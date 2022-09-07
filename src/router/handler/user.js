@@ -58,13 +58,34 @@ exports.register = (req, res) => {
 
 //通过id获取用户信息
 exports.getUserById = (req, res) => {
-  res.json({
-    code: 200,
-    message: '请求成功!',
-    data: '通过id获取用户信息'
+  const {id } = req.params
+  db.query("SELECT * FROM  ev_user  WHERE id =  ?", id,(err,result)=>{
+    if (err) return res.cc(err)
+    console.log('111',result);
+    if (result.length!==1) return res.cc('获取用户信息失败!')
+    const user =  result[0]
+    const data  ={
+      data :user
+    }
+    res.cc("获取成功!",1,data)
   })
+  
 }
 
+// 获取用户信息
+exports.getUser = (req,res)=>{
+  db.query('SELECT * from ev_user',(err,result)=>{
+      if (err) return res.cc(err)
+      if (result.length!==1) return res.cc('获取用户信息失败!')
+      const data  ={
+        data :{
+          
+        }
+      }
+      res.cc("ok",1 ,data)
+  })
+  
+} 
 //通过id删除用户
 exports.deleteUserById = (req, res) => {
   console.log('req---', req.params);

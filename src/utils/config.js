@@ -3,6 +3,6 @@
 // exports.expiresIn = expiresIn
 // exports.secretKey = secretKey
 module.exports ={
-  expiresIn : "1h",
+  expiresIn : "8h",
   secretKey : "anran0919@163.com",
 }

@@ -43,13 +43,8 @@ app.get('/', (req, res) => {
 })
 // 错误处理
 app.use((err, req, res,next) => {
-  //TODO  此处res.cc 不止为何为undefined
   // fix 获取不到res.cc ,需将自定义统一处理中间件放在token解析中间件之前
   if (err.name == 'UnauthorizedError') return res.cc('身份认证失败!')
-  // if (err.name === 'UnauthorizedError') return res.json({
-  //   status :1,
-  //   message : '身份认证失败!'
-  // })
   res.cc(err)
 })
 

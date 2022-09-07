@@ -13,6 +13,9 @@ router.post('/api/user/register',expressJoi(userSchema.reg_login_schema),hanlder
 //通过id获取用户信息
 router.get('/api/user/:id', hanlder.getUserById)
 
+//通过用户信息
+router.get('/api/user', hanlder.getUser)
+
 //通过id删除用户
 router.delete('/api/user/:id', hanlder.deleteUserById)
 
