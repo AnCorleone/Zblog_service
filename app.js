@@ -9,8 +9,10 @@ const { secretKey} =  require('./src/utils/config')
 // const { expressjwt: jwt } = require("express-jwt");
 
 const app = express()
-// 生成json的中间件
-// app.use(jwt({ secret: secretKey, algorithms: ["HS256"] }).unless({ path: '/api/user/register' }))
+// 配置解析 Token 的中间件
+app.use(jwt({ secret: secretKey, algorithms: ["HS256"] }).unless({ path: ['/api/user/register','/api/user/login'] }))
+// 使用 .unless({ path: [/^\/api\//] }) 指定哪些接口不需要进行 Token 的身份认证
+// app.use(jwt({ secret: secretKey, algorithms: ["HS256"] }).unless({ path: [/^\/api\//] }))
 // 配置跨域中间件
 app.use(cors())
 app.use(express.json())
@@ -43,8 +45,13 @@ app.get('/', (req, res) => {
 })
 // 错误处理
 app.use((err, req, res,next) => {
-  if (err instanceof joi.ValidationError) return res.cc(err)
-  res.cc(err)
+  //  此处res.cc 不止为何为undefined
+  // if (err.name == 'UnauthorizedError') return res.cc('身份认证失败!')
+  if (err.name === 'UnauthorizedError') return res.json({
+    status :1,
+    message : '身份认证失败!'
+  })
+  res.send(err)
 })
 
 app.listen('3007', () => {

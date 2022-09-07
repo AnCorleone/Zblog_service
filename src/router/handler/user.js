@@ -1,17 +1,35 @@
 const db = require('../../db/index')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const  {expiresIn,secretKey} = require('../../utils/config')
+const { expiresIn, secretKey } = require('../../utils/config')
 exports.login = (req, res) => {
-  const body =  req.body
-  // 生成token
-  const payload = { username:body.username}
-  const token =  jwt.sign(payload,secretKey,{expiresIn})
-  const data  ={
-    message: '请求成功!',
-    token
-  }
-  res.cc('登录成功!',0, data)
+  const user = req.body
+  const { username, password } = user
+  db.query('SELECT * FROM  ev_user  WHERE username = ?', username, (err, result) => {
+    if (err) return res.cc(err, 1)
+    if (result.length > 0) {
+      console.log(' password -- ',password);
+      console.log(' password -- ',result[0].password);
+      const isCompare = bcrypt.compareSync(password, result[0].password)
+      console.log(' isCompare :  ',isCompare);
+      if (isCompare) {
+        // 生成token ,为了安全,密码和头像不参与token生成
+        const payload = { ...user, password:'',user_pic:'' }
+        const token = "Bearer "+ jwt.sign(payload, secretKey, { expiresIn }) 
+        const data = {
+          message: '请求成功!',
+          token
+        }
+        res.cc('登录成功!', 0, data)
+      }else {
+        res.cc('密码错误!')
+      }
+    } else {
+      return res.cc("用户不存在!")
+    }
+
+  })
+
 }
 
 //注册
@@ -24,7 +42,7 @@ exports.register = (req, res) => {
     // if (err) return res.send({ status: 1, message: 'SQL查询错误!' })
     if (err) return res.cc(err)
     if (result.length > 0) return res.cc('用户名已存在!')
-    const bcryptPassword = bcrypt.hashSync(body.password, 10) 
+    const bcryptPassword = bcrypt.hashSync(body.password, 10)
     //  插入新用户
     // const insertSql = 'INSERT INTO ev_user (username, password, nickname) VALUES (?, ?, ?)'
     const insertSql = 'INSERT INTO ev_user set ?'
