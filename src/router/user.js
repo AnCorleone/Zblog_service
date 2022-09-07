@@ -5,7 +5,7 @@ const userSchema =  require('../schema/user')
 const router = express.Router()
 
 // 登录
-router.get('/api/user/login', hanlder.login)
+router.get('/api/user/login', expressJoi(userSchema.reg_login_schema), hanlder.login)
 
 //注册 包含了表单校验中间件, 自定义的请求处理函数
 router.post('/api/user/register',expressJoi(userSchema.reg_login_schema),hanlder.register)

@@ -3,10 +3,14 @@ const userRouter = require('./src/router/user')
 const joi = require('joi')
 // const mysql = require('mysql')
 const cors = require('cors')
+const { expressjwt: jwt } = require("express-jwt");
+const { secretKey} =  require('./src/utils/config')
 // const session = require('express-session')
 // const { expressjwt: jwt } = require("express-jwt");
 
 const app = express()
+// 生成json的中间件
+// app.use(jwt({ secret: secretKey, algorithms: ["HS256"] }).unless({ path: '/api/user/register' }))
 // 配置跨域中间件
 app.use(cors())
 app.use(express.json())

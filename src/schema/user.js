@@ -9,7 +9,7 @@ const joi = require('joi')
  */
 
 // 用户名校验规则
-const username = joi.string().alphanum().min(6).max(36).required()
+const username = joi.string().alphanum().min(2).max(36).required()
 // 密码校验规则
 const password  =joi.string().pattern(/^[\S]{6,12}$/).min(6).max(36).required()
 
