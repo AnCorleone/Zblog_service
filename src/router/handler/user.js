@@ -89,9 +89,9 @@ exports.getUser = (req,res)=>{
 // 更新用户信息
 exports.updateUser =(req,res) =>{
     const user =  req.body
+    delete user.id  // id 不做修改
     db.query('update ev_user set ? where id=?',[user ,user.id], (err,result)=>{
       if (err) return res.cc(err)
-      console.log(' ---  result ===  ',result);
       if (!result) return res.cc('更新用户信息失败!')
       res.cc('update ok !',1,result)
     })
@@ -99,7 +99,24 @@ exports.updateUser =(req,res) =>{
 
 // 重置密码
 exports.resetPassword =(req,res) =>{
-  res.cc(' reset ok !')
+  const {id,oldPassword,password }  =  req.body
+  // 1. 查询用户是否存在 , 应该不需要,因为有token信息,但是为了获取密码和传入的秘密进行比较需要此操作
+  db.query('SELECT * from ev_user where id = ?',id, (err,result)=>{
+    if (err) return res.cc(err)
+    if (result.length!==1) return res.cc('用户不存在!') 
+    // 2. 比较旧密码是否正确
+    const isCompare =  bcrypt.compareSync(oldPassword, result[0].password)
+    if(!isCompare) return res.cc('旧密码错误!')
+      // 3. 对新密码加密之后存入数据库
+    const bcryptPassword = bcrypt.hashSync(password, 10)
+    const info = {
+      password :bcryptPassword
+    }
+    db.query('update ev_user set ? where id = ? ',[info,id] ,(err,result)=>{
+      if (err) return res.cc(err)
+      res.cc("重置密码成功",0 ,result)
+    })
+  })
 }
 //通过id删除用户
 exports.deleteUserById = (req, res) => {

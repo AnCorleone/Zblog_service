@@ -33,4 +33,14 @@ exports.reg_update_schema ={
   }
 }
 
+// 重置密码
+exports.reg_reset_schema ={
+  body :{
+    id,
+    oldPassword:password,
+    password: joi.not(joi.ref('oldPasword')).concat(password),
+  }
+}
+
+
 

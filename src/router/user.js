@@ -23,6 +23,6 @@ router.delete('/api/user/:id', hanlder.deleteUserById)
 router.put('/api/user/update',expressJoi(userSchema.reg_update_schema), hanlder.updateUser)
 
 // 重置密码
-router.put('/api/user/reset', hanlder.resetPassword)
+router.put('/api/user/reset',expressJoi(userSchema.reg_reset_schema), hanlder.resetPassword)
 
 module.exports = router
