@@ -2,20 +2,16 @@ const db = require('../../db/index')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { expiresIn, secretKey } = require('../../utils/config')
-const { use } = require('../user')
 exports.login = (req, res) => {
   const user = req.body
   const { username, password } = user
   db.query('SELECT * FROM  ev_user  WHERE username = ?', username, (err, result) => {
     if (err) return res.cc(err, 1)
     if (result.length > 0) {
-      console.log(' password -- ',password);
-      console.log(' password -- ',result[0].password);
       const isCompare = bcrypt.compareSync(password, result[0].password)
-      console.log(' isCompare :  ',isCompare);
       if (isCompare) {
         // 生成token ,为了安全,密码和头像不参与token生成
-        const payload = { ...user, password:'',user_pic:'' }
+        const payload = { ...result[0], password:'',user_pic:'' }
         const token = "Bearer "+ jwt.sign(payload, secretKey, { expiresIn }) 
         const data = {
           message: '请求成功!',
@@ -75,7 +71,7 @@ exports.getUserById = (req, res) => {
 // 获取用户信息
 exports.getUser = (req,res)=>{
   const auth = req.auth
-  db.query('SELECT * from ev_user WHERE username = ?',auth.username,(err,result)=>{
+  db.query('SELECT * from ev_user WHERE id = ?',auth.id,(err,result)=>{
       if (err) return res.cc(err)
       if (result.length!==1) return res.cc('获取用户信息失败!')
       const user = result[0]
@@ -97,7 +93,7 @@ exports.updateUser =(req,res) =>{
       if (err) return res.cc(err)
       console.log(' ---  result ===  ',result);
       if (!result) return res.cc('更新用户信息失败!')
-      res.cc('update ok !',1,user)
+      res.cc('update ok !',1,result)
     })
 }
 

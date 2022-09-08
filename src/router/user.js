@@ -20,7 +20,7 @@ router.get('/api/user', hanlder.getUser)
 router.delete('/api/user/:id', hanlder.deleteUserById)
 
 //更新用户信息
-router.put('/api/user/update', hanlder.updateUser)
+router.put('/api/user/update',expressJoi(userSchema.reg_update_schema), hanlder.updateUser)
 
 // 重置密码
 router.put('/api/user/reset', hanlder.resetPassword)
