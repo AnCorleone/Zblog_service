@@ -25,4 +25,8 @@ router.put('/api/user/update',expressJoi(userSchema.reg_update_schema), hanlder.
 // 重置密码
 router.put('/api/user/reset',expressJoi(userSchema.reg_reset_schema), hanlder.resetPassword)
 
+// 更新用户头像
+router.put('/api/update/avatar', expressJoi(userSchema.update_avatar_schema), hanlder.updateAvatar)
+// router.put('/api/update/avatar', hanlder.updateAvatar)
+
 module.exports = router

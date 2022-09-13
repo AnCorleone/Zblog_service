@@ -114,7 +114,7 @@ exports.resetPassword =(req,res) =>{
     }
     db.query('update ev_user set ? where id = ? ',[info,id] ,(err,result)=>{
       if (err) return res.cc(err)
-      res.cc("重置密码成功",0 ,result)
+      res.cc("重置密码成功",0 ,result) 
     })
   })
 }
@@ -137,6 +137,16 @@ exports.deleteUserById = (req, res) => {
       message: '获取id失败!'
     })
   }
+}
 
-
+// 更新用户头像
+exports.updateAvatar = (req,res)=>{
+  const {id, avatar} =  req.body
+  console.log('更新用户头像',req.body);
+  db.query('update ev_user set user_pic = ? where id = ?  ',[avatar,id], (err,result)=>{
+    if(err) return res.cc(err)
+    if (result.affectedRows!==1)  return res.cc('更新用户头像失败!')  
+    res.cc('更新用户头像成功!',0,{...req.body,...result})  
+  })
+  
 }
