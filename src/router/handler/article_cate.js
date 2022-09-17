@@ -9,6 +9,7 @@ exports.getCateList = (req, res) => {
 
 exports.deleteCateById = (req, res) => {
   const { id } = req.params
+  console.log('deleteCateById ... ',id);
   db.query('DELETE FROM  ev_article_cate where id = ? ', id, (err, result) => {
     if (err) return res.cc(err)
     if (result.affectedRows !== 1) return res.cc('删除文章分类失败')
@@ -39,4 +40,18 @@ exports.getCateById = (req, res) => {
     res.cc('查询成功', 0, result)
   })
 
+}
+
+/**
+ * 更新
+ */
+exports.upateCate =(req,res)=>{
+  const body =  req.body
+  const id = body.id
+  delete body.id
+  db.query('update ev_article_cate set ? where id = ?',[body,id] , (err,result)=>{
+      if(err) return  res.cc(err)
+      if (result.affectedRows!=1) return res.cc('更新失败!')
+      res.cc('更新成功!',0,result)
+  })
 }
